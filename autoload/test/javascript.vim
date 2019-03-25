@@ -19,7 +19,7 @@ endfunction
 
 
 function! test#javascript#has_package(package) abort
-  let path = test#javascript#find_file()
+  let path = test#javascript#find_file('package.json')
 
   for line in readfile(path + '/package.json')
     if line =~ '"'.a:package.'"'

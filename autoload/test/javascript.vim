@@ -5,16 +5,18 @@ let test#javascript#patterns = {
 
 
 function! test#javascript#find_package_json() abort
-	let path = fnamemodify('', ':p')
-	while path != '/'
-		let jsonFiles = split(globpath(path, '*.json'), '\n')
-		if get(jsonFiles, 'package.json', 'none') != 'none'
-			return path
-		else
-			set path = join(split(path, '/')[:-2]), '/')
-		endif
-	endwhile
-	return path
+  let path = fnamemodify('', ':p')
+  while path != '/'
+    echo path
+    if get(split(globpath(path, '*.json'), '\n'), 'package.json', 'none') != 'none'
+      return path
+    else
+      let splitpath = split(path, '/')
+      let chomppath = splitpath[:-2]
+      let path = '/' + join(chomppath, '/')
+    endif
+  endwhile
+  return 1
 endfunction
 
 

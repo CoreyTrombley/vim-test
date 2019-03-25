@@ -6,14 +6,18 @@ let test#javascript#patterns = {
 
 function! test#javascript#find_package_json() abort
   let path = fnamemodify('', ':p')
-  while path != '/'
-    if index(split(globpath(path, '*.json'), '\n'), 'package.json') != -1
+  let pathlevels = len(split(path, '/'))
+  while pathlevels >= 1
+    let files = split(globpath(path, '*'), '\n')
+    let found = index(files, path.'/package.json')
+    if found != -1
       return path
-    else
-      let splitpath = split(path, '/')
-      let chomppath = splitpath[:-2]
-      let path = '/' + join(chomppath, '/')
     endif
+    let splitpath = split(path, '/')
+    let chomppath = splitpath[:-2]
+    let joinedpath = join(chomppath, '/')
+    let path = '/'.joinedpath
+    let pathlevels -= 1
   endwhile
   return 0
 endfunction
@@ -32,4 +36,12 @@ function! test#javascript#has_package(package) abort
   endfor
 
   return 0
+endfunction
+
+function! TestWhile() abort
+  let i = 0
+  while i < 10
+    let i += 1
+    echo i
+  endwhile
 endfunction

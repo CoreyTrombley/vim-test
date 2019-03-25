@@ -7,8 +7,7 @@ let test#javascript#patterns = {
 function! test#javascript#find_package_json() abort
   let path = fnamemodify('', ':p')
   while path != '/'
-    echo path
-    if get(split(globpath(path, '*.json'), '\n'), 'package.json', 'none') != 'none'
+    if index(split(globpath(path, '*.json'), '\n'), 'package.json') != -1
       return path
     else
       let splitpath = split(path, '/')
@@ -16,12 +15,15 @@ function! test#javascript#find_package_json() abort
       let path = '/' + join(chomppath, '/')
     endif
   endwhile
-  return 1
+  return 0
 endfunction
 
 
 function! test#javascript#has_package(package) abort
   let path = test#javascript#find_package_json()
+
+  if path == 0
+    return 0
 
   for line in readfile(path + '/package.json')
     if line =~ '"'.a:package.'"'
